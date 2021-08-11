@@ -40,7 +40,7 @@ function Main() {
             Axios.post("/compress",data,{responseType: 'blob'}).then(response => {
                 console.log("got al files in api ");
                 console.log(response)
-                var Name = Date.now()+'-output.zip'
+                var Name = Date.now()+'-output.json'
                 Download(response.data,Name)
                 Swal.fire({
                     icon: 'success',
