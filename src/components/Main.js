@@ -8,6 +8,13 @@ function Main() {
     const [showButton,setShowButton]=useState(false)
     const [name,setName] = useState('')
     const [click,setClick] = useState(false)
+
+    useEffect(()=>{
+        Axios.get("/initial").then(res=>{
+            console.log(res.data)
+        })
+    },[])
+
     const upload=async (e)=>{
         e.preventDefault();
         const files = e.target.files;
