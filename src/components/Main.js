@@ -36,7 +36,7 @@ function Main({dispatch,currentJson,currentClick}) {
         SetClick(true)
         Axios.post("/update",{name:name}).then(res=>{
             console.log("Done!")
-            console.log(res.data.name,res.data.JsonFileName,res.data.JsonData)
+            //console.log(res.data.name,res.data.JsonFileName,res.data.JsonData)
             if(res.data.JsonData){
                 dispatch(setClick(true))
                 dispatch(setJson(JSON.parse(res.data.JsonData)))
