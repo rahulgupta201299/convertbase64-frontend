@@ -3,11 +3,15 @@ import Axios from '../Axios'
 import './Main.css'
 import Download from 'downloadjs'
 import Swal from 'sweetalert2'
+import Lottie from 'react-lottie'
+import {connect} from 'react-redux'
+import {setClick,setJson} from './redux/Json/Json-action'
+import File from './File.json'
 
-function Main() {
+function Main({dispatch,currentJson,currentClick}) {
     const [showButton,setShowButton]=useState(false)
     const [name,setName] = useState('')
-    const [click,setClick] = useState(false)
+    const [click,SetClick] = useState(false)
 
     useEffect(()=>{
         Axios.get("/initial").then(res=>{
@@ -29,10 +33,14 @@ function Main() {
     }
     
     const update = ()=>{
-        setClick(true)
+        SetClick(true)
         Axios.post("/update",{name:name}).then(res=>{
             console.log("Done!")
-            console.log(res.data.name,res.data.JsonFileName)
+            console.log(res.data.name,res.data.JsonFileName,res.data.JsonData)
+            if(res.data.JsonData){
+                dispatch(setClick(true))
+                dispatch(setJson(JSON.parse(res.data.JsonData)))
+            }
             let data ={
                 name: res.data.name,
                 JsonFileName: res.data.JsonFileName
@@ -66,6 +74,15 @@ function Main() {
         })
     }
 
+    const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: currentJson,
+        rendererSettings: {
+            preserveAspectRatio: "xMidYMid slice"
+          }    
+    }
+
     return (
         <div className="container">
             <h1 className="">Upload Zip Folder</h1>
@@ -73,8 +90,21 @@ function Main() {
             {
                 showButton?<button className={!click?"button":"disableButton"} onClick={update}><b>{click?<i class="fa fa-circle-o-notch fa-spin"></i>:''} Update</b></button>:""
             }
+            {
+                currentClick?(
+                    <Lottie
+                        options={defaultOptions}
+                        
+                        />
+                ):null
+            }
         </div>
     )
 }
 
-export default Main
+const mapStateToProps=(state)=>({
+    currentClick: state.user.currentClick,
+    currentJson: state.user.currentJson
+})
+
+export default connect(mapStateToProps,null)(Main)
